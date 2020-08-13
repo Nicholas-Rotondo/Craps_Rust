@@ -35,6 +35,7 @@ fn main() {
     
     println!("A {} and {} were rolled. ", dice1, dice2);
     
+    // issue with choice resolved. Needed trim method to compare to other strings. 
     if choice.trim() == "pass" {
         println!("Test works");
         if roll == 7 || roll == 11 {
