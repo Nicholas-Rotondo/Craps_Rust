@@ -12,14 +12,12 @@ fn main() {
         pot: i32,
 	};
 
-    // set variables uptop 
+    // set variables
     let dice1 = rand::thread_rng().gen_range(1, 7);
     let dice2 = rand::thread_rng().gen_range(1, 7);
-    let pass_bet = 10;
-    let mut rolling = true;
-    let pass_combo = vec![7, 11];
-    let no_pass_combo = vec![2, 3, 12];
+    let mut roll = dice1 + dice2;
 
+    println!("The total is: {}", roll);
     // create an instance 
     let mut nick = Player {
         name: String::from("Nick"),
@@ -30,31 +28,31 @@ fn main() {
     println!("Place pass or no pass bet(pass/no pass): ");
 
     // get choice - make mutable since read_line requires mut data
-    let mut choice.trim() = String::new();
+    let mut choice = String::new();
     io::stdin().read_line(&mut choice)
     .expect("Failed to read line");
-
-
-
-
-
+    
+    
     println!("A {} and {} were rolled. ", dice1, dice2);
-    if (dice1 + dice2 == 7) || (dice1 + dice2 == 11) { 
-        if choice.trim() == "pass" {
-            println!("Pass wins");
+    
+    if choice.trim() == "pass" {
+        println!("Test works");
+        if roll == 7 || roll == 11 {
+            println!("Second test successful, equaled pass");
+        }
+        else {
+            println!("Executing normally, didn't equal above condition for pass");
         }
     }
-    else if (dice1 + dice2 == 2 )|| (dice1 + dice2 == 3) || (dice1 + dice2 == 12) {
-        if choice.trim() == "no pass" {
-            println!("Craps wins.");
-		  }
-		}
-    else {
-            println!("Point set.");
-		}
+    else if choice.trim() == "no pass" || choice.trim() == "nopass" {
+        if roll == 2 || roll == 3 || roll == 11 {
+            println!("Second test successful, equaled no pass");
+        }
+        else {
+            println!("Executing normally, didn't equal above condition for no pass");
+        }
+    }
 
 
-
-    //if player placed on pass double his money. If he place on no pass lose his bet. 
-    // same goes for if they placed on no pass. Double or deduct bet.
+    //end of main function
 }
