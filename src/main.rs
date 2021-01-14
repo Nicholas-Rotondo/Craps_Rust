@@ -31,13 +31,8 @@ fn pass_round(comeout_roll: i32) {
     // call dice_roll function
     println!("Roll is: {}", comeout_roll);
 
-    // Create an instance of Player.
-    let nick = Player {
-        name: String::from("Nick"),
-        pot: 100,
-    }; 
+    let nick = Player::new_player();
 
-    
     println!("{}: ", nick.get_pot());
     // println!("{}, {} show it has initialized and can be accessed: ", nick.name, nick.pot);
 
