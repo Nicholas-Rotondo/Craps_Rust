@@ -2,6 +2,7 @@ pub mod create_player {
     pub struct Player {
         pub name: String,
         pub pot: i32,
+        pub bet: i32,
     }
     
     use std::io;
@@ -10,9 +11,9 @@ pub mod create_player {
         // use self when working with the instance of self.
         // otherwise just an associated function used for returning and constructing a new instance.
 
-        // starting pot for the round. use this to determine if they can bet past their pot.
+        // starting pot for the round. need at least $100 else can't play.
         pub fn set_pot() -> i32 {
-            println!("Minimum pot is 100: ");
+            println!("Minimum pot to play is $100: ");
 
             let mut starting_pot = String::new();
             io::stdin()
@@ -26,7 +27,7 @@ pub mod create_player {
         }
 
         // set bet
-        pub fn set_bet() -> i32 {
+        pub fn make_bet() -> i32 {
             println!("Minimum amount to bet is $5. Please place a bet: ");
 
             let mut bet = String::new();
@@ -39,17 +40,19 @@ pub mod create_player {
             return bet;
         }
 
-        pub fn make_bet_check_positive(mut pot: i32, mut bet: i32) -> i32 {
-            pot = Self::set_pot();
-            bet = Self::set_bet();
+        
+        pub fn won_bet(&mut self) -> i32 {
+            
+            self.pot += self.bet;
+            println!("Pot is now: {}", self.pot);
+            self.pot
+        }
 
-            if bet > pot {
-                return 0;
-            }
-            else {
-                pot -= bet;
-            }
-            return pot;
+        pub fn lost_bet(&mut self) -> i32 {
+            
+            self.pot -= self.bet;
+            println!("Pot is now: {}", self.pot);
+            self.pot
         }
 
         // set name from command line.
@@ -73,6 +76,7 @@ pub mod create_player {
             Player {
                 name: Self::set_name(),
                 pot: Self::set_pot(),
+                bet: Self::make_bet(),
             }
         }
 

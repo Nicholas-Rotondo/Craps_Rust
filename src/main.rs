@@ -31,10 +31,7 @@ fn pass_round(comeout_roll: i32) {
     // call dice_roll function
     println!("Roll is: {}", comeout_roll);
 
-    let nick = Player::new_player();
-
-    println!("{}: ", nick.get_pot());
-    // println!("{}, {} show it has initialized and can be accessed: ", nick.name, nick.pot);
+    let mut nick = Player::new_player();
 
     // Get user input. 
     println!("Place pass or no pass bet(pass/no pass): ");
@@ -49,18 +46,22 @@ fn pass_round(comeout_roll: i32) {
     if comeout_roll == 7 || comeout_roll == 11 {
         if choice.trim() == "pass" {
             println!("Pass bets won, crap out bets lose.");
+            nick.won_bet();
+
         }
         else {
-            println!("Executing normally, move to point round");
+            println!("Lost bet.");
+            nick.lost_bet();
         }
     }
     else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
         if choice.trim() == "no pass" || choice.trim() == "nopass" {
-
             println!("Crap out bets won, pass bets lose.");
+            nick.won_bet();
         }
         else {
-            println!("Executing normally, move to point round");
+            println!("Lost bet.");
+            nick.lost_bet();
         }
     }
     else {
