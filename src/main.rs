@@ -1,5 +1,9 @@
 // import section
 extern crate rand;
+extern crate simple_excel_writer as excel;
+
+// external dependencies 
+use excel::*;
 use std::io;
 use rand::Rng;
 
@@ -17,6 +21,11 @@ fn main() {
     
 }
 
+// fn add_player() -> Player {
+//     let mut player1 = Player::new_player();
+//     return player1;
+// }
+
 fn dice_roll() -> i32 {
     let dice1 = rand::thread_rng().gen_range(1, 7);
     let dice2 = rand::thread_rng().gen_range(1, 7);
@@ -31,7 +40,8 @@ fn pass_round(comeout_roll: i32) {
     // call dice_roll function
     println!("Roll is: {}", comeout_roll);
 
-    let mut nick = Player::new_player();
+    let mut player1 = Player::new_player();
+    player1.make_bet();
 
     // Get user input. 
     println!("Place pass or no pass bet(pass/no pass): ");
@@ -43,25 +53,25 @@ fn pass_round(comeout_roll: i32) {
     
     
     // Issue with choice resolved. Needed trim method to compare to other strings. 
+    // add restart function when [2, 3, 7, 11, 12]
     if comeout_roll == 7 || comeout_roll == 11 {
         if choice.trim() == "pass" {
             println!("Pass bets won, crap out bets lose.");
-            nick.won_bet();
-
+            player1.won();
         }
         else {
             println!("Lost bet.");
-            nick.lost_bet();
+            player1.lost();
         }
     }
     else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
         if choice.trim() == "no pass" || choice.trim() == "nopass" {
-            println!("Crap out bets won, pass bets lose.");
-            nick.won_bet();
+            println!("Crap out bets won, pass bets lose."); 
+            player1.won();
         }
         else {
             println!("Lost bet.");
-            nick.lost_bet();
+            player1.lost();
         }
     }
     else {

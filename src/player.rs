@@ -22,12 +22,12 @@ pub mod create_player {
 
             // used shadowing technique from guessing game.
             let mut starting_pot: i32 = starting_pot.trim().parse().expect("Please type a number!");
-
+            
             return starting_pot;
         }
 
         // set bet
-        pub fn make_bet() -> i32 {
+        pub fn make_bet(&mut self) -> i32 {
             println!("Minimum amount to bet is $5. Please place a bet: ");
 
             let mut bet = String::new();
@@ -36,22 +36,19 @@ pub mod create_player {
             .expect("Failed to read line");
 
             let bet: i32 = bet.trim().parse().expect("Please type a number!");
-
-            return bet;
+             
+            self.bet
         }
 
-        
-        pub fn won_bet(&mut self) -> i32 {
-            
-            self.pot += self.bet;
-            println!("Pot is now: {}", self.pot);
+        pub fn won(&mut self) -> i32 {
+            let mut bet = Self::make_bet(self);
+            self.pot += bet;
             self.pot
         }
 
-        pub fn lost_bet(&mut self) -> i32 {
-            
-            self.pot -= self.bet;
-            println!("Pot is now: {}", self.pot);
+        pub fn lost(&mut self) -> i32 {
+            let mut bet = Self::make_bet(self);
+            self.pot -= bet;
             self.pot
         }
 
@@ -67,16 +64,17 @@ pub mod create_player {
         }
 
         // getter method for testing access to different functions within modules
-        pub fn get_pot(&self) -> i32 {
+        pub fn show_pot(&self) -> i32 {
+            println!("Current holdings are: {}", self.pot);
             self.pot
         }
 
         // create new players on the fly.
-        pub fn new_player() -> Player {
+        pub fn new_player() -> Self {
             Player {
                 name: Self::set_name(),
                 pot: Self::set_pot(),
-                bet: Self::make_bet(),
+                bet: 0,
             }
         }
 
