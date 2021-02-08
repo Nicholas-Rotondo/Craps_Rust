@@ -2,7 +2,6 @@ pub mod create_player {
     pub struct Player {
         pub name: String,
         pub pot: i32,
-        pub bet: i32,
     }
     
     use std::io;
@@ -37,18 +36,8 @@ pub mod create_player {
 
             let bet: i32 = bet.trim().parse().expect("Please type a number!");
              
-            self.bet
-        }
-
-        pub fn won(&mut self) -> i32 {
-            let mut bet = Self::make_bet(self);
-            self.pot += bet;
-            self.pot
-        }
-
-        pub fn lost(&mut self) -> i32 {
-            let mut bet = Self::make_bet(self);
             self.pot -= bet;
+            println!("Pot: {}", self.pot);
             self.pot
         }
 
@@ -63,18 +52,11 @@ pub mod create_player {
             return name;
         }
 
-        // getter method for testing access to different functions within modules
-        pub fn show_pot(&self) -> i32 {
-            println!("Current holdings are: {}", self.pot);
-            self.pot
-        }
-
         // create new players on the fly.
         pub fn new_player() -> Self {
             Player {
                 name: Self::set_name(),
                 pot: Self::set_pot(),
-                bet: 0,
             }
         }
 

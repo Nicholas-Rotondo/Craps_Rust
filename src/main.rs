@@ -17,14 +17,15 @@ mod player;
 fn main() {
 
     let roll: i32 = dice_roll();
-    pass_round(roll);  
+    let mut player1 = add_player();
+    pass_round(roll, player1);  
     
 }
 
-// fn add_player() -> Player {
-//     let mut player1 = Player::new_player();
-//     return player1;
-// }
+fn add_player() -> Player {
+    let mut player1 = Player::new_player();
+    return player1;
+}
 
 fn dice_roll() -> i32 {
     let dice1 = rand::thread_rng().gen_range(1, 7);
@@ -35,12 +36,11 @@ fn dice_roll() -> i32 {
 }
 
 // Separate the pass round into smaller modules.  
-fn pass_round(comeout_roll: i32) {
+fn pass_round(comeout_roll: i32, mut player1: Player) {
 
     // call dice_roll function
     println!("Roll is: {}", comeout_roll);
 
-    let mut player1 = Player::new_player();
     player1.make_bet();
 
     // Get user input. 
@@ -57,31 +57,27 @@ fn pass_round(comeout_roll: i32) {
     if comeout_roll == 7 || comeout_roll == 11 {
         if choice.trim() == "pass" {
             println!("Pass bets won, crap out bets lose.");
-            player1.won();
         }
         else {
             println!("Lost bet.");
-            player1.lost();
         }
     }
     else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
         if choice.trim() == "no pass" || choice.trim() == "nopass" {
             println!("Crap out bets won, pass bets lose."); 
-            player1.won();
         }
         else {
             println!("Lost bet.");
-            player1.lost();
         }
     }
     else {
         println!("Point is now {}", comeout_roll);
-        point_round(comeout_roll);
+        point_round(comeout_roll, player1);
     }
 
 }
 
-fn point_round(point: i32){
+fn point_round(point: i32, mut player1: Player){
 
     // copy point and keep rolling until a 7 is rolled. if a 7 is rolled break
     // can't compare i32 and &i32. two different types.
@@ -93,9 +89,11 @@ fn point_round(point: i32){
     while flag == false {
         let roll: i32 = dice_roll(); 
         println!("Roll is: {}", roll);
+        
 
         if roll == ref_point {
-            point_round(ref_point);
+            player1.make_bet();
+            dice_roll();
             flag = true;
         } else if roll == 7 {
             println!("Crapout, session over.");
@@ -119,7 +117,7 @@ fn restart(mut flag: bool) -> bool {
 
     flag = false;
     if choice.trim() == "y" || choice.trim() == "yes" {
-        pass_round(roll);
+        main();
     } else if choice.trim() == "n" || choice == "no" {
         println!("Take care.");
         flag = true;
