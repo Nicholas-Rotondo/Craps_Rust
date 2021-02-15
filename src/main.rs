@@ -35,13 +35,23 @@ fn dice_roll() -> i32 {
     return roll;
 }
 
+fn user_input() -> i32 {
+    println!("Place a bet on point or another number: ");
+
+    // Get choice - make mutable since read_line requires mut data
+    let mut choice = String::new();
+    io::stdin().read_line(&mut choice)
+    .expect("Failed to read line");
+    let mut choice: i32 = choice.trim().parse().expect("Please type a number!");
+
+    return choice;
+}
+
 // Separate the pass round into smaller modules.  
 fn pass_round(comeout_roll: i32, mut player1: Player) {
 
     // call dice_roll function
     println!("Roll is: {}", comeout_roll);
-
-    player1.make_bet();
 
     // Get user input. 
     println!("Place pass or no pass bet(pass/no pass): ");
@@ -56,17 +66,21 @@ fn pass_round(comeout_roll: i32, mut player1: Player) {
     // add restart function when [2, 3, 7, 11, 12]
     if comeout_roll == 7 || comeout_roll == 11 {
         if choice.trim() == "pass" {
+            player1.won();
             println!("Pass bets won, crap out bets lose.");
         }
         else {
+            player1.lost();
             println!("Lost bet.");
         }
     }
     else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
         if choice.trim() == "no pass" || choice.trim() == "nopass" {
+            player1.won();
             println!("Crap out bets won, pass bets lose."); 
         }
         else {
+            player1.lost();
             println!("Lost bet.");
         }
     }
@@ -85,18 +99,22 @@ fn point_round(point: i32, mut player1: Player){
 
     //must be mutable
     let mut flag = false;
+
+    let roll: i32 = dice_roll();
     
     while flag == false {
-        let roll: i32 = dice_roll(); 
-        println!("Roll is: {}", roll);
-        
 
-        if roll == ref_point {
-            player1.make_bet();
-            dice_roll();
-            flag = true;
+        // let roll: i32 = dice_roll(); 
+        player1.update_bet();
+        println!("Roll is: {}", roll);
+
+        let mut choice = user_input();
+
+        if choice == ref_point {
+            player1.won();
         } else if roll == 7 {
             println!("Crapout, session over.");
+            player1.lost();
             restart(flag);
             flag = true;
         }
