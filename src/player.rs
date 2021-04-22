@@ -1,14 +1,17 @@
 pub mod create_player {
+    #[derive(Clone)]
+    #[derive(Debug)]
+
     pub struct Player {
         pub name: String,
+        pub pass_bet: String,
         pub pot: i32,
         pub bet: i32,
     }
     
     use std::io;
     impl Player {
-        
-
+    
         // use self when working with the instance of self.
         // otherwise just an associated function used for returning and constructing a new instance.
 
@@ -53,21 +56,21 @@ pub mod create_player {
             return name;
         }
 
-        pub fn won(&mut self) -> i32 {
+        pub fn won(&mut self) -> &i32 {
             let mut bet = self.bet;
             self.pot += bet;
             println!("You won! Pot is now: {}", self.pot);
-            self.pot
+            &self.pot
         }
 
-        pub fn lost(&mut self) -> i32 {
+        pub fn lost(&mut self) -> &i32 {
             let mut bet = self.bet;
             self.pot -= bet;
             println!("You lost. Pot is now: {}", self.pot);
-            self.pot
+            &self.pot
         }
 
-        pub fn update_bet(&mut self) -> i32 {
+        pub fn update_bet(&mut self) -> &i32 {
             println!("Minimum amount to bet is $5. Please place a bet: ");
 
             let mut bet = String::new();
@@ -79,13 +82,39 @@ pub mod create_player {
             self.bet = bet;
             self.pot -= bet;
             println!("Bet is {} and pot {}", self.bet, self.pot);
-            self.bet         
+            &self.bet         
+        }
+
+        pub fn set_pass_bet() -> String {
+            println!("Please place pass or no pass: ");
+
+            let mut pass_bet = String::new();
+            io::stdin().read_line(&mut pass_bet)
+            .expect("Failed to read line");
+
+            return pass_bet;
+        }
+        pub fn get_pass(&self) -> &String{
+            &self.pass_bet
+        }
+
+        // when returning &=borrow reference &self.pass_bet must return a &String to match the values.
+        pub fn update_pass_bet(&mut self) -> &String {
+            println!("Pass or no pass: ");
+
+            let mut pass_bet = String::new();
+            io::stdin().read_line(&mut pass_bet)
+            .expect("Failed to read line");
+
+            self.pass_bet = pass_bet;
+            &self.pass_bet
         }
 
         // create new players on the fly.
         pub fn new_player() -> Self {
             Player {
                 name: Self::set_name(),
+                pass_bet: Self::set_pass_bet(),
                 pot: Self::set_pot(),
                 bet: Self::set_bet(),
             }

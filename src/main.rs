@@ -17,14 +17,42 @@ mod player;
 fn main() {
 
     let roll: i32 = dice_roll();
-    let mut player1 = add_player();
-    pass_round(roll, player1);  
+    // let mut player1 = add_player();
+
+    let mut players_vector: Vec<Player> = add_players();
+
+    pass_round(roll, players_vector);  
     
 }
 
-fn add_player() -> Player {
-    let mut player1 = Player::new_player();
-    return player1;
+// fn add_player() -> Player {
+//     let mut player1 = Player::new_player();
+//     return player1;
+// }
+
+fn add_players() -> Vec<Player> {
+    let mut player_vector: Vec<Player> = Vec::new();
+    let mut count: i32 = 0;
+
+    println!("Welcome to Craps! How many players are joining: ");
+
+    let mut player_count = String::new();
+    io::stdin()
+    .read_line(&mut player_count)
+    .expect("Failed to read line");
+
+    let player_count: i32 = player_count.trim().parse().expect("How many players are participating: ");
+
+    while count < player_count {
+        let mut player = Player::new_player();
+        player_vector.push(player);
+        count += 1; 
+    }
+
+    // print players names to show current users at the "table"
+    println!("{:?}", player_vector);
+    return player_vector;
+
 }
 
 fn dice_roll() -> i32 {
@@ -42,85 +70,78 @@ fn user_input() -> i32 {
     let mut choice = String::new();
     io::stdin().read_line(&mut choice)
     .expect("Failed to read line");
-    let mut choice: i32 = choice.trim().parse().expect("Please type a number!");
+    let mut choice: i32 = choice.trim().parse().expect("Please type a number: ");
 
     return choice;
 }
-
-// Separate the pass round into smaller modules.  
-fn pass_round(comeout_roll: i32, mut player1: Player) {
+ 
+fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
 
     // call dice_roll function
     println!("Roll is: {}", comeout_roll);
 
-    // Get user input. 
-    println!("Place pass or no pass bet(pass/no pass): ");
-
-    // Get choice - make mutable since read_line requires mut data
-    let mut choice = String::new();
-    io::stdin().read_line(&mut choice)
-    .expect("Failed to read line");
-    
-    
-    // Issue with choice resolved. Needed trim method to compare to other strings. 
-    // add restart function when [2, 3, 7, 11, 12]
-    if comeout_roll == 7 || comeout_roll == 11 {
-        if choice.trim() == "pass" {
-            player1.won();
-            println!("Pass bets won, crap out bets lose.");
+    for mut player in players_vector {
+        // Issue with choice resolved. Needed trim method to compare to other strings. 
+        // add restart function when [2, 3, 7, 11, 12]
+        if comeout_roll == 7 || comeout_roll == 11 {
+            if player.get_pass() == "pass" {
+                player.won();
+                println!("Pass bets won, crap out bets lose.");
+            }
+            else {
+                player.lost();
+                println!("Lost bet.");
+            }
         }
-        else {
-            player1.lost();
-            println!("Lost bet.");
-        }
+        else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
+            if player.get_pass() == "no pass" || player.get_pass() == "nopass" {
+                player.won();
+                println!("Crap out bets won, pass bets lose."); 
+            }
+            else {
+                player.lost();
+                println!("Lost bet.");
+            }
+            }
+            else {
+                println!("Goodbye...");
+                // println!("Point is now {}", comeout_roll);
+                // point_round(comeout_roll, players_vector);
+            }
     }
-    else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
-        if choice.trim() == "no pass" || choice.trim() == "nopass" {
-            player1.won();
-            println!("Crap out bets won, pass bets lose."); 
-        }
-        else {
-            player1.lost();
-            println!("Lost bet.");
-        }
-    }
-    else {
-        println!("Point is now {}", comeout_roll);
-        point_round(comeout_roll, player1);
-    }
-
 }
-
-fn point_round(point: i32, mut player1: Player){
-
-    // copy point and keep rolling until a 7 is rolled. if a 7 is rolled break
-    // can't compare i32 and &i32. two different types.
-    let ref_point = point;
-
-    //must be mutable
-    let mut flag = false;
-
-    let roll: i32 = dice_roll();
     
-    while flag == false {
 
-        // let roll: i32 = dice_roll(); 
-        player1.update_bet();
-        println!("Roll is: {}", roll);
 
-        let mut choice = user_input();
+// fn point_round(point: i32, mut players_vector: Vec<Player>){
 
-        if choice == ref_point {
-            player1.won();
-        } else if roll == 7 {
-            println!("Crapout, session over.");
-            player1.lost();
-            restart(flag);
-            flag = true;
-        }
-    }
+//     // copy point and keep rolling until a 7 is rolled. if a 7 is rolled break
+//     // can't compare i32 and &i32. two different types.
+//     let ref_point = point;
 
-}
+//     //must be mutable
+//     let mut flag = false;
+
+    
+//     while flag == false {
+
+//         let roll: i32 = dice_roll(); 
+//         //players_vector.update_bet();
+//         println!("Roll is: {}", roll);
+        
+//         //mut choice is trimmed in the player module and parsed to equate to i32(signed ints)
+//         let mut choice = user_input();
+
+//         if choice == ref_point {
+//             //players_vector.won();
+//         } else if roll == 7 {
+//             println!("Crapout, session over.");
+//             //players_vector.lost();
+//             restart(flag);
+//             flag = true;
+//         }
+//     }
+// }
 
 fn restart(mut flag: bool) -> bool {
 
