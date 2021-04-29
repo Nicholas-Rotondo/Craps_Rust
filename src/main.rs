@@ -1,6 +1,7 @@
 // import section
 extern crate rand;
 extern crate simple_excel_writer as excel;
+use std::any::type_name;
 
 // external dependencies 
 use excel::*;
@@ -74,40 +75,61 @@ fn user_input() -> i32 {
 
     return choice;
 }
- 
+
+fn type_of<T>(_: T) -> &'static str {
+    type_name::<T>()
+}
+
 fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
 
     // call dice_roll function
     println!("Roll is: {}", comeout_roll);
+    let mut check = false;
 
     for mut player in players_vector {
-        // Issue with choice resolved. Needed trim method to compare to other strings. 
-        // add restart function when [2, 3, 7, 11, 12]
-        if comeout_roll == 7 || comeout_roll == 11 {
-            if player.get_pass() == "pass" {
-                player.won();
-                println!("Pass bets won, crap out bets lose.");
-            }
-            else {
-                player.lost();
-                println!("Lost bet.");
-            }
+        
+        let player_pass = player.get_pass();
+        let as_str_pass = player_pass.as_str();
+        let string_pass = "pass";
+
+        println!("{}", type_of(player_pass));
+        println!("{}", type_of(as_str_pass));
+        println!("{}", type_of(string_pass));
+
+        // match needs to be passed an &str type variable - not String type variable
+        // values don't match. could be a struct(&str - as_str_pass) compared to regular &str   
+
+        match as_str_pass {
+            "pass" => println!("pass bet"),
+            "no pass" => println!("no pass"),
+            _ => println!("incorrect input"),
         }
-        else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
-            if player.get_pass() == "no pass" || player.get_pass() == "nopass" {
-                player.won();
-                println!("Crap out bets won, pass bets lose."); 
-            }
-            else {
-                player.lost();
-                println!("Lost bet.");
-            }
-            }
-            else {
-                println!("Goodbye...");
-                // println!("Point is now {}", comeout_roll);
-                // point_round(comeout_roll, players_vector);
-            }
+
+        // if comeout_roll == 7 || comeout_roll == 11 {
+        //     if player.get_pass() == "pass" {
+        //         player.won();
+        //         println!("Pass bets won, crap out bets lose.");
+        //     }
+        //     else {
+        //         player.lost();
+        //         println!("Lost bet.");
+        //     }
+        // }
+        // else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
+        //     if player.get_pass() == "no pass" || player.get_pass() == "nopass" {
+        //         player.won();
+        //         println!("Crap out bets won, pass bets lose."); 
+        //     }
+        //     else {
+        //         player.lost();
+        //         println!("Lost bet.");
+        //     }
+        //     }
+        //     else {
+        //         println!("Goodbye...");
+        //         // println!("Point is now {}", comeout_roll);
+        //         // point_round(comeout_roll, players_vector);
+        //     }
     }
 }
     

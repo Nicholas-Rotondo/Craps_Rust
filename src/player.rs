@@ -91,6 +91,7 @@ pub mod create_player {
             let mut pass_bet = String::new();
             io::stdin().read_line(&mut pass_bet)
             .expect("Failed to read line");
+        
 
             return pass_bet;
         }
