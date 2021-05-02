@@ -3,7 +3,9 @@ pub mod create_player {
     #[derive(Debug)]
 
     pub struct Player {
+        // change from String to str type. 1
         pub name: String,
+        // change from String to str type. 2
         pub pass_bet: String,
         pub pot: i32,
         pub bet: i32,
@@ -46,6 +48,7 @@ pub mod create_player {
         }
 
         // set name from command line.
+        // might not need to change from String to str.
         pub fn set_name() -> String {
             println!("Please enter a name to play: ");
 
@@ -85,6 +88,7 @@ pub mod create_player {
             &self.bet         
         }
 
+        // change from String to str type. 3
         pub fn set_pass_bet() -> String {
             println!("Please place pass or no pass: ");
 
@@ -93,13 +97,14 @@ pub mod create_player {
             .expect("Failed to read line");
         
 
-            return pass_bet;
+            return pass_bet.trim().to_string();
         }
         pub fn get_pass(&self) -> &String{
             &self.pass_bet
         }
 
         // when returning &=borrow reference &self.pass_bet must return a &String to match the values.
+        // change from String to str type. 4
         pub fn update_pass_bet(&mut self) -> &String {
             println!("Pass or no pass: ");
 

@@ -1,10 +1,7 @@
-fn test() {
-    use crate::player::create_player::Player;
+// functions that ive used and learned to test different logical bugs/errors
 
-    mod player;
-
-    let roll: i32 = dice_roll();
-    let mut player1 = add_player();
-    pass_round(roll, player1);  
-    
-}
+    // match as_str_pass {
+    //     "pass" => println!("pass bet"),
+    //     "no pass" => println!("no pass"),
+    //     _ => println!("incorrect input"),
+    // }

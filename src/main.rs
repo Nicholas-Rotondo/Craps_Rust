@@ -18,7 +18,6 @@ mod player;
 fn main() {
 
     let roll: i32 = dice_roll();
-    // let mut player1 = add_player();
 
     let mut players_vector: Vec<Player> = add_players();
 
@@ -26,10 +25,6 @@ fn main() {
     
 }
 
-// fn add_player() -> Player {
-//     let mut player1 = Player::new_player();
-//     return player1;
-// }
 
 fn add_players() -> Vec<Player> {
     let mut player_vector: Vec<Player> = Vec::new();
@@ -86,84 +81,80 @@ fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
     println!("Roll is: {}", comeout_roll);
     let mut check = false;
 
+    let mut copy_players_vector = players_vector.clone();
+
     for mut player in players_vector {
         
         let player_pass = player.get_pass();
         let as_str_pass = player_pass.as_str();
-        let string_pass = "pass";
 
-        println!("{}", type_of(player_pass));
         println!("{}", type_of(as_str_pass));
-        println!("{}", type_of(string_pass));
+
 
         // match needs to be passed an &str type variable - not String type variable
         // values don't match. could be a struct(&str - as_str_pass) compared to regular &str   
 
-        match as_str_pass {
-            "pass" => println!("pass bet"),
-            "no pass" => println!("no pass"),
-            _ => println!("incorrect input"),
-        }
 
-        // if comeout_roll == 7 || comeout_roll == 11 {
-        //     if player.get_pass() == "pass" {
-        //         player.won();
-        //         println!("Pass bets won, crap out bets lose.");
-        //     }
-        //     else {
-        //         player.lost();
-        //         println!("Lost bet.");
-        //     }
-        // }
-        // else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
-        //     if player.get_pass() == "no pass" || player.get_pass() == "nopass" {
-        //         player.won();
-        //         println!("Crap out bets won, pass bets lose."); 
-        //     }
-        //     else {
-        //         player.lost();
-        //         println!("Lost bet.");
-        //     }
-        //     }
-        //     else {
-        //         println!("Goodbye...");
-        //         // println!("Point is now {}", comeout_roll);
-        //         // point_round(comeout_roll, players_vector);
-        //     }
+        if comeout_roll == 7 || comeout_roll == 11 {
+            if player.get_pass() == "pass" {
+                player.won();
+                println!("Pass bets won, {:?} won", player);
+            }
+            else {
+                player.lost();
+                println!("{:?} lost the bet.", player);
+            }
+        }
+        else if comeout_roll == 2 || comeout_roll == 3 || comeout_roll == 12 {
+            if player.get_pass() == "no pass" || player.get_pass() == "nopass" {
+                player.won();
+                println!("Crap out bets won. {:?} won", player); 
+            }
+            else {
+                player.lost();
+                println!("{:?} lost the bet.", player);
+            }
+        }
+        else {
+            println!("{} point round is: ", comeout_roll);
+            point_round(comeout_roll, (copy_players_vector).to_vec());
+        }
     }
 }
     
+// BRB POOPING
 
+fn point_round(point: i32, mut players_vector: Vec<Player>){
 
-// fn point_round(point: i32, mut players_vector: Vec<Player>){
+    // copy point and keep rolling until a 7 is rolled. if a 7 is rolled break
+    // can't compare i32 and &i32. two different types.
+    let ref_point = point;
 
-//     // copy point and keep rolling until a 7 is rolled. if a 7 is rolled break
-//     // can't compare i32 and &i32. two different types.
-//     let ref_point = point;
+    //must be mutable
+    let mut flag = false;
 
-//     //must be mutable
-//     let mut flag = false;
+    println!("You have made it here successfully.")
 
     
-//     while flag == false {
+    // while flag == false {
 
-//         let roll: i32 = dice_roll(); 
-//         //players_vector.update_bet();
-//         println!("Roll is: {}", roll);
+    //     let roll: i32 = dice_roll(); 
+    //     //players_vector.update_bet();
+    //     println!("Roll is: {}", roll);
         
-//         //mut choice is trimmed in the player module and parsed to equate to i32(signed ints)
-//         let mut choice = user_input();
+    //     //mut choice is trimmed in the player module and parsed to equate to i32(signed ints)
+    //     let mut choice = user_input();
 
-//         if choice == ref_point {
-//             //players_vector.won();
-//         } else if roll == 7 {
-//             println!("Crapout, session over.");
-//             //players_vector.lost();
-//             restart(flag);
-//             flag = true;
-//         }
-//     }
-// }
+    //     if choice == ref_point {
+    //         //players_vector.won();
+    //     } else if roll == 7 {
+    //         println!("Crapout, session over.");
+    //         //players_vector.lost();
+    //         restart(flag);
+    //         flag = true;
+    //     }
+    // }
+}
 
 fn restart(mut flag: bool) -> bool {
 
