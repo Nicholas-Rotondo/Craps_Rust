@@ -136,6 +136,7 @@ fn point_round(point: i32, mut players_vector: Vec<Player>){
         while flag == false {
 
             let roll: i32 = dice_roll(); 
+            player.update_pass_bet();
             player.update_bet();
             println!("Roll is: {}", roll);
 
@@ -143,10 +144,14 @@ fn point_round(point: i32, mut players_vector: Vec<Player>){
                 if roll == point {
                     // get_pass() returns &str - point is an i32 type
                     // change point to &str or 
-                    if player.get_pass() == point {
+                    let player_pass_num: i32 = player.get_pass().trim().parse().expect("Place string as number");
+                    if player_pass_num == point {
                         player.won();
                     }
                 }
+            } else {
+                println!("7 has been rolled");
+                player.lost();
             }
         }
     }   
