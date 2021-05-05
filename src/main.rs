@@ -71,10 +71,6 @@ fn user_input() -> i32 {
     return choice;
 }
 
-fn type_of<T>(_: T) -> &'static str {
-    type_name::<T>()
-}
-
 fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
 
     // call dice_roll function
@@ -87,8 +83,6 @@ fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
         
         let player_pass = player.get_pass();
         let as_str_pass = player_pass.as_str();
-
-        println!("{}", type_of(as_str_pass));
 
 
         // match needs to be passed an &str type variable - not String type variable
@@ -122,7 +116,6 @@ fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
     }
 }
     
-// BRB POOPING
 
 fn point_round(point: i32, mut players_vector: Vec<Player>){
 
@@ -133,27 +126,30 @@ fn point_round(point: i32, mut players_vector: Vec<Player>){
     //must be mutable
     let mut flag = false;
 
-    println!("You have made it here successfully.")
+    println!("You have made it here successfully.");
 
-    
-    // while flag == false {
+    for mut player in players_vector {
 
-    //     let roll: i32 = dice_roll(); 
-    //     //players_vector.update_bet();
-    //     println!("Roll is: {}", roll);
-        
-    //     //mut choice is trimmed in the player module and parsed to equate to i32(signed ints)
-    //     let mut choice = user_input();
+        let player_pass = player.get_pass();
+        let as_str_pass = player_pass.as_str();
 
-    //     if choice == ref_point {
-    //         //players_vector.won();
-    //     } else if roll == 7 {
-    //         println!("Crapout, session over.");
-    //         //players_vector.lost();
-    //         restart(flag);
-    //         flag = true;
-    //     }
-    // }
+        while flag == false {
+
+            let roll: i32 = dice_roll(); 
+            player.update_bet();
+            println!("Roll is: {}", roll);
+
+            if roll != 7 {
+                if roll == point {
+                    // get_pass() returns &str - point is an i32 type
+                    // change point to &str or 
+                    if player.get_pass() == point {
+                        player.won();
+                    }
+                }
+            }
+        }
+    }   
 }
 
 fn restart(mut flag: bool) -> bool {

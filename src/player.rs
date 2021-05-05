@@ -99,6 +99,7 @@ pub mod create_player {
 
             return pass_bet.trim().to_string();
         }
+
         pub fn get_pass(&self) -> &String{
             &self.pass_bet
         }
@@ -112,7 +113,7 @@ pub mod create_player {
             io::stdin().read_line(&mut pass_bet)
             .expect("Failed to read line");
 
-            self.pass_bet = pass_bet;
+            self.pass_bet = pass_bet.trim().to_string();
             &self.pass_bet
         }
 
