@@ -59,18 +59,6 @@ fn dice_roll() -> i32 {
     return roll;
 }
 
-fn user_input() -> i32 {
-    println!("Place a bet on point or another number: ");
-
-    // Get choice - make mutable since read_line requires mut data
-    let mut choice = String::new();
-    io::stdin().read_line(&mut choice)
-    .expect("Failed to read line");
-    let mut choice: i32 = choice.trim().parse().expect("Please type a number: ");
-
-    return choice;
-}
-
 fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
 
     // call dice_roll function
@@ -110,7 +98,7 @@ fn pass_round(comeout_roll: i32, players_vector: Vec<Player>) {
             }
         }
         else {
-            println!("{} point round is: ", comeout_roll);
+            println!("Point is {} ", comeout_roll);
             point_round(comeout_roll, (copy_players_vector).to_vec());
         }
     }
@@ -126,7 +114,7 @@ fn point_round(point: i32, mut players_vector: Vec<Player>){
     //must be mutable
     let mut flag = false;
 
-    println!("You have made it here successfully.");
+    println!("You have made it to the point round successfully.");
 
     for mut player in players_vector {
 
@@ -135,23 +123,24 @@ fn point_round(point: i32, mut players_vector: Vec<Player>){
 
         while flag == false {
 
-            let roll: i32 = dice_roll(); 
+            //issue arising when two players are involved. refer to word doc
             player.update_pass_bet();
             player.update_bet();
-            println!("Roll is: {}", roll);
+
+            let roll: i32 = dice_roll(); 
 
             if roll != 7 {
-                if roll == point {
-                    // get_pass() returns &str - point is an i32 type
-                    // change point to &str or 
-                    let player_pass_num: i32 = player.get_pass().trim().parse().expect("Place string as number");
-                    if player_pass_num == point {
-                        player.won();
-                    }
+                // get_pass() returns &str - point is an i32 type
+                // change point to &str or 
+                let player_pass_num: i32 = player.get_pass().trim().parse().expect("Place string as number");
+                println!("Roll is: {}", roll);
+                if player_pass_num == point {
+                    player.won();
                 }
             } else {
                 println!("7 has been rolled");
                 player.lost();
+                flag = true;
             }
         }
     }   
